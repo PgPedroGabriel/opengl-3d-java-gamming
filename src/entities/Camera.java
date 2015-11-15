@@ -20,7 +20,7 @@ public class Camera {
 	{
 		if(Keyboard.isKeyDown(Keyboard.KEY_W))
 		{
-			position.z -= 0.02f;
+			position.z -= 0.8f;
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_D))
