@@ -1,5 +1,9 @@
 package engineTester;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -25,30 +29,55 @@ public class MainGameLoop {
 		
 		Loader loader = new Loader();
 		
-		RawModel model = OBJLoader.loadObjModel("stall", loader);
+		RawModel model = OBJLoader.loadObjModel("tree", loader);
 			
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
-		ModelTexture texture = staticModel.getTexture();
 
+		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel", loader), 
+				new ModelTexture(loader.loadTexture("grassTexture")));
 		
-		Entity entity = new Entity(staticModel, new Vector3f(0,0,-50), 0,0,0, 1);
+		grass.getTexture().setHasTranparency(true);
+		grass.getTexture().setUseFakeLighting(true);
+		
+		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern", loader), 
+				new ModelTexture(loader.loadTexture("fern")));
+		
+		fern.getTexture().setHasTranparency(true);
+		
+		
+		List<Entity> entities = new ArrayList<Entity>();
+		Random random = new Random();
+		
+		for (int i = 0 ; i < 500; i++)
+		{
+			entities.add(new Entity(staticModel, new Vector3f(random.nextFloat() * 400, 0, 
+						random.nextFloat() * 400), 0,0,0, 3));
+			entities.add(new Entity(grass, new Vector3f(random.nextFloat() * 350, 0, 
+					random.nextFloat() * 350), 0,0,0, 1));
+			entities.add(new Entity(fern, new Vector3f(random.nextFloat() * 400, 0, 
+					random.nextFloat() * 400), 0,0,0, 0.6f));
+			
+		}
+		
+		//Entity entity = new Entity(staticModel, new Vector3f(-300,0,0), 0,0,0, 1);
 		Light light = new Light(new Vector3f(3000,2000, 2000), new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain = new Terrain(0,0, loader, new ModelTexture(loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
 		
-		
+
 		MasterRenderer renderer = new MasterRenderer();
 		
 		
 		while(!Display.isCloseRequested())
 		{
-			entity.increaseRotation(0, 1, 0);
+			//entity.increaseRotation(0, 1, 0);
 			camera.move();	
 			
 			renderer.proccessTerrain(terrain);
-			renderer.proccessEntity(entity);
+			for(Entity entity: entities)
+				renderer.proccessEntity(entity);
 			
 			renderer.render(light,camera);
 			DisplayManager.updatedisplay();
