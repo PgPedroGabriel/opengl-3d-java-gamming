@@ -1,70 +1,85 @@
 package entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
-public class Camera {
+public class Camera
+{
 
-	private Vector3f position = new Vector3f(0,0,0);
+	private Vector3f position = new Vector3f(-16, 1, -26);
 	private float pitch;
 	private float yaw;
 	private float roll;
-	
-	
+
 	public Camera()
 	{
-		
 	}
-	
+
 	public void move()
 	{
-		if(Keyboard.isKeyDown(Keyboard.KEY_W))
+
+		float arg_yaw = Mouse.getDX() ;
+		System.out.println(arg_yaw) ;
+		yaw += arg_yaw/10 ;
+		float arg_roll = Mouse.getDY() ;
+		pitch += -(arg_roll/10) ;
+		Mouse.setGrabbed(true);
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) 
 		{
-			position.z -= 0.8f;
+			float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
+			float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
+			position.x -= toX;
+			position.z -= toZ;
+
 		}
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_D))
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)) 
 		{
-			position.x += 0.02f;
+			float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
+			float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
+			position.x += toX;
+			position.z += toZ;
 		}
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_A))
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) 
 		{
-			position.x -= 0.02f;
-		}		
+			float toZ = ((float)Math.sin( Math.toRadians(yaw))) ;
+			float toX = ((float)Math.cos( Math.toRadians(yaw))) ;
+			position.x += toX;
+			position.z += toZ;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) 
+		{
+			float toZ = ((float)Math.sin( Math.toRadians(yaw))) ;
+			float toX = ((float)Math.cos( Math.toRadians(yaw))) ;
+			position.x -= toX;
+			position.z -= toZ;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) 
+		{
+			position.y += 0.2f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) 
+		{
+			position.y -= 0.2f;
+		}
 	}
-	
-	public Vector3f getPosition() {
+	public Vector3f getPosition()
+	{
 		return position;
 	}
-
-	public void setPosition(Vector3f position) {
-		this.position = position;
-	}
-
-	public float getPitch() {
+	public float getPitch()
+	{
 		return pitch;
 	}
-
-	public void setPitch(float pitch) {
-		this.pitch = pitch;
-	}
-
-	public float getYaw() {
+	public float getYaw()
+	{
 		return yaw;
 	}
-
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
-	}
-
-	public float getRoll() {
+	public float getRoll()
+	{
 		return roll;
 	}
-
-	public void setRoll(float roll) {
-		this.roll = roll;
-	}
-
-
 }

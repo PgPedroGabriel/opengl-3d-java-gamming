@@ -12,8 +12,9 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.Renderer;
+import renderEngine.EntityRenderer;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 public class MainGameLoop {
@@ -26,13 +27,14 @@ public class MainGameLoop {
 		
 		RawModel model = OBJLoader.loadObjModel("stall", loader);
 			
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
+		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
 		ModelTexture texture = staticModel.getTexture();
-		texture.setShineDamper(10);
-		texture.setReflectivity(1);
+
 		
 		Entity entity = new Entity(staticModel, new Vector3f(0,0,-50), 0,0,0, 1);
-		Light light = new Light(new Vector3f(0,0, -20), new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(3000,2000, 2000), new Vector3f(1,1,1));
+		
+		Terrain terrain = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
 		
@@ -45,6 +47,7 @@ public class MainGameLoop {
 			entity.increaseRotation(0, 1, 0);
 			camera.move();	
 			
+			renderer.proccessTerrain(terrain);
 			renderer.proccessEntity(entity);
 			
 			renderer.render(light,camera);
