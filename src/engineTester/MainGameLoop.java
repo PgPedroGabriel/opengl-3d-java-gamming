@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
@@ -20,6 +21,8 @@ import renderEngine.EntityRenderer;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 public class MainGameLoop {
 
@@ -28,6 +31,17 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		
 		Loader loader = new Loader();
+		
+		
+		
+		TerrainTexture backGroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		
+		TerrainTexturePack texturePack = new TerrainTexturePack(backGroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		
 		
 		RawModel model = OBJLoader.loadObjModel("tree", loader);
 			
@@ -62,19 +76,25 @@ public class MainGameLoop {
 		//Entity entity = new Entity(staticModel, new Vector3f(-300,0,0), 0,0,0, 1);
 		Light light = new Light(new Vector3f(3000,2000, 2000), new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,0, loader, new ModelTexture(loader.loadTexture("grass")));
-		
-		Camera camera = new Camera();
+		Terrain terrain = new Terrain(0,0, loader, texturePack, blendMap);
+	
 		
 
 		MasterRenderer renderer = new MasterRenderer();
+	
+		RawModel bunnyModel = OBJLoader.loadObjModel("tree", loader);
+		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("tree")));
 		
+		Player player = new Player(stanfordBunny, new Vector3f(100, 0, 100), 0,180,0, 0.6f);
+		
+		Camera camera = new Camera(player);
 		
 		while(!Display.isCloseRequested())
 		{
 			//entity.increaseRotation(0, 1, 0);
 			camera.move();	
-			
+			player.move();
+			renderer.proccessEntity(player);
 			renderer.proccessTerrain(terrain);
 			for(Entity entity: entities)
 				renderer.proccessEntity(entity);
