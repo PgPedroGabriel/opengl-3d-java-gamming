@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -19,6 +22,8 @@ public class Player extends Entity{
 	private float currentTurnSpeed = 0;
 	private float upwardsSpeed = 0;
 	
+	private List<Integer> eatedsCarrot = new ArrayList<Integer>();
+	
 	private boolean isInAir = false;
 	
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
@@ -27,7 +32,7 @@ public class Player extends Entity{
 	}
 	
 	
-	public void move()
+	public void move(List<Entity> carrots)
 	{
 		checkInputs();
 		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
@@ -44,7 +49,24 @@ public class Player extends Entity{
 			super.getPosition().y = TERRAIN_HEIGHT;
 			isInAir = false;
 		}
+		
+		for(Entity carrot: carrots)
+		{
+			if(this.getXPosRounded() >= carrot.getXPosRounded() - 3 &&
+			   this.getXPosRounded() <= carrot.getXPosRounded() + 3 &&
+			   this.getZPosRounded() >= carrot.getZPosRounded() - 3 &&
+			   this.getZPosRounded() <= carrot.getZPosRounded() + 3)
+			{
+				this.eatCarrot(carrot);
+			}
+		}
 	}
+	
+	private void eatCarrot(Entity carrot)
+	{
+		this.eatedsCarrot.add(carrot.id);
+	}
+	
 	
 	private void jump()
 	{
@@ -54,6 +76,11 @@ public class Player extends Entity{
 			isInAir = true;
 		}
 			
+	}
+	
+	public boolean eated(Entity carrot)
+	{
+		return this.eatedsCarrot.contains(carrot.id);
 	}
 	
 	private void checkInputs()

@@ -10,6 +10,7 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;	
 	private float scale;
+	public int id;
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super();
@@ -19,13 +20,38 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		this.id = -1;
 	}
+	
+	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, int id) {
+		super();
+		this.model = model;
+		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+		this.id = id;
+	}
+	
+	
 	
 	public void increasePostion(float dx, float dy, float dz)
 	{
 		this.position.x += dx;
 		this.position.y += dy;
 		this.position.z += dz;
+	}
+	
+
+	protected int getXPosRounded()
+	{
+		return (int) Math.floor(this.getPosition().x);		
+	}
+	
+	protected int getZPosRounded()
+	{
+		return (int) Math.floor(this.getPosition().z);
 	}
 	
 	public void increaseRotation(float dx, float dy, float dz)

@@ -21,8 +21,6 @@ public class Camera
 	{
 		this.player = player;
 		
-		
-		
 	}
 
 	public void move()

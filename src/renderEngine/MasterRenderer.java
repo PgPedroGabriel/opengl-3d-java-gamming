@@ -100,6 +100,12 @@ public class MasterRenderer {
 		}
 	}
 	
+	public void removeEntity(Entity entity)
+	{
+		
+		entities.remove(entity.getModel());
+	}
+	
 	public void cleanUp()
 	{
 		shader.cleanUp();
